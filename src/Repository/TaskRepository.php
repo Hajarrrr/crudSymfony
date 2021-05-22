@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Task;
+use App\Entity\Message;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Task|null find($id, $lockMode = null, $lockVersion = null)
- * @method Task|null findOneBy(array $criteria, array $orderBy = null)
- * @method Task[]    findAll()
- * @method Task[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Message|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Message|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Message[]    findAll()
+ * @method Message[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class TaskRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Task::class);
+        parent::__construct($registry, Message::class);
     }
 
     // /**
-    //  * @return Task[] Returns an array of Task objects
+    //  * @return Message[] Returns an array of Message objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class TaskRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Task
+    public function findOneBySomeField($value): ?Message
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.exampleField = :val')

@@ -1,0 +1,16 @@
+<form method="POST" action="{{ action }}">
+    <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" class="form-control" id="description" name="description" value="{{ message.description }}"
+               aria-describedby="message" placeholder="message">
+        {#{% if message %}
+            <input type="text" class="form-control" id="description" name="description" value="{{ message.description }}"
+                   aria-describedby="description" placeholder="Description">
+        {% else %}
+            <input type="text" class="form-control" id="description" name="description" value=""
+                   aria-describedby="descripcion" placeholder="Descripción">
+        {% endif %}#}
+        <small id="descripcionAyuda" class="form-text text-muted">Description du message.</small>
+    </div>
+    <button type="submit" class="btn btn-primary">{{ etiqueta_btn_enviar|default('Guardar') }}</button>
+</form>

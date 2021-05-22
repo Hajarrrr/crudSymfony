@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Task;
+use App\Entity\Message;
 use App\Repository\TaskRepository;
 use App\Service\TaskManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,36 +20,36 @@ class TaskController extends AbstractController
      * @param TaskRepository $taskRepository
      * @return Response
      */
-    public function Tasks(TaskRepository $taskRepository): Response
+    public function Messages(TaskRepository $taskRepository): Response
     {
-        $tasks = $taskRepository->findAll();
+        $messages = $taskRepository->findAll();
         //$tasks = $taskRepository->findBy([], ['id' => 'DESC']);
 
-        return $this->render('task/tasks.html.twig', [
+        return $this->render('message/messages.html.twig', [
             'controller_name' => 'TaskController',
-            'tasks' => $tasks,
+            'messages' => $messages,
         ]);
     }
 
 
     /**
-     * @Route("/tarea/crear", name="app_create_task")
+     * @Route("/message/create", name="app_create_task")
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return Response
      */
     public function create(Request $request, EntityManagerInterface $em): Response
     {
-        $task = new Task();
+        $message = new Message();
         $description = $request->request->get('description', null);
 
         if ($description !== null) {
             if (!empty($description)){
                 $em = $this->getDoctrine()->getManager();
-                $task->setDescription($description);
-                $em->persist($task);
+                $message->setDescription($description);
+                $em->persist($message);
                 $em->flush();
-                $this->addFlash('success', 'Tarea creada correctamente');
+                $this->addFlash('success', 'message sent');
 
                 return $this->redirectToRoute('app_tasks');
             }
@@ -57,14 +57,14 @@ class TaskController extends AbstractController
                 $this->addFlash('warning', 'El campo descripcion no puede estar vacio');
             }
         }
-        return $this->render('task/create.html.twig', [
-            'task' => $task
+        return $this->render('message/create.html.twig', [
+            'message' => $message
         ]);
     }
 
 
     /**
-     * @Route("/tarea/editar/{id}", name="app_edit_task")
+     * @Route("/message/edit/{id}", name="app_edit_task")
      * @param int $id
      * @param TaskRepository $taskRepository
      * @param Request $request
@@ -73,10 +73,10 @@ class TaskController extends AbstractController
     public function edit(int $id, TaskRepository $taskRepository, Request $request): Response
     {
         // Find the task to update
-        $task = $taskRepository->find($id);
+        $message = $taskRepository->find($id);
 
         // Check if exists the task with this id
-        if (!$task){
+        if (!$message){
             throw $this->createNotFoundException();
         }
 
@@ -85,10 +85,10 @@ class TaskController extends AbstractController
         if ($description !== null) {
             if (!empty($description)){
                 $em = $this->getDoctrine()->getManager();
-                $task->setDescription($description);
-                $em->persist($task);
+                $message->setDescription($description);
+                $em->persist($message);
                 $em->flush();
-                $this->addFlash('success', 'Tarea creada correctamente');
+                $this->addFlash('success', 'Message edited!');
 
                 return $this->redirectToRoute('app_tasks');
             }
@@ -97,8 +97,8 @@ class TaskController extends AbstractController
             }
         }
 
-        return $this->render('task/edit.html.twig', [
-            'task' => $task,
+        return $this->render('message/edit.html.twig', [
+            'message' => $message,
         ]);
     }
 
@@ -106,20 +106,20 @@ class TaskController extends AbstractController
     /**
      * Con paramsConvert
      * @Route(
-     *      "/tarea/editar-convert-param/{id}",
+     *      "/message/editar-convert-param/{id}",
      *      name="app_edit_task_convert-param",
      * )
-     * @param Task $task
+     * @param Message $message
      * @param Request $request
      * @return Response
      */
-    public function editParamsConvert(Task $task, Request $request): Response
+    public function editParamsConvert(Message $message, Request $request): Response
     {
         $descripcion = $request->request->get('description', null);
         if (null !== $descripcion) {
             if (!empty($descripcion)) {
                 $em = $this->getDoctrine()->getManager();
-                $task->setDescription($descripcion);
+                $message->setDescription($descripcion);
                 $em->flush();
                 $this->addFlash(
                     'success',
@@ -133,25 +133,25 @@ class TaskController extends AbstractController
                 );
             }
         }
-        return $this->render('task/edit.html.twig', [
-            "task" => $task,
+        return $this->render('message/edit.html.twig', [
+            "message" => $message,
         ]);
     }
 
 
     /**
-     * @Route("/tarea/eliminar/{id}", name="app_delete_task")
+     * @Route("/message/eliminar/{id}", name="app_delete_task")
      * @param Task $task
      * @return Response
      */
-    public function delete(Task $task): Response
+    public function delete(Message $message): Response
     {
         $em = $this->getDoctrine()->getManager();
-        $em->remove($task);
+        $em->remove($message);
         $em->flush();
         $this->addFlash(
             'success',
-            'Tarea eliminada correctamente!'
+            'message deleted!'
         );
 
         return $this->redirectToRoute('app_tasks');
@@ -161,7 +161,7 @@ class TaskController extends AbstractController
     // ------------------- Methods with Task services ----------------------------------
 
     /**
-     * @Route("/crear/tarea-servicio", name="app_create_task_service")
+     * @Route("/create/message-service", name="app_create_task_service")
      * @param TaskManager $taskManager
      * @param Request $request
      * @return Response
@@ -169,16 +169,16 @@ class TaskController extends AbstractController
     public function createService(TaskManager $taskManager, Request $request): Response
     {
         $description = $request->request->get('description', null);
-        $task = new Task();
+        $message = new Message();
         if (null !== $description) {
-            $task->setDescription($description);
-            $errors = $taskManager->validateTask($task);
+            $message->setDescription($description);
+            $errors = $taskManager->validateTask($message);
 
             if (empty($errors)) {
-                $taskManager->createService($task);
+                $taskManager->createService($message);
                 $this->addFlash(
                     'success',
-                    'Tarea creada correctamente!'
+                    'Message sent!'
                 );
                 return $this->redirectToRoute('app_tasks');
             } else {
@@ -190,8 +190,8 @@ class TaskController extends AbstractController
                 }
             }
         }
-        return $this->render('task/create.html.twig', [
-            "task" => $task,
+        return $this->render('message/create.html.twig', [
+            "message" => $message,
         ]);
     }
 
@@ -199,7 +199,7 @@ class TaskController extends AbstractController
     /**
      * Con paramsConvert
      * @Route(
-     *      "/editar/tarea-servicio/{id}",
+     *      "/edit/message-service/{id}",
      *      name="app_edit_task_service-params-convert",
      *      requirements={"id"="\d+"}
      * )
@@ -208,15 +208,15 @@ class TaskController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function updateParamsConvertService(TaskManager $taskManager, Task $task, Request $request): Response
+    public function updateParamsConvertService(TaskManager $taskManager, Message $message, Request $request): Response
     {
         $description = $request->request->get('description', null);
         if (null !== $description) {
-            $task->setDescription($description);
-            $errors = $taskManager->validateTask($task);
+            $message->setDescription($description);
+            $errors = $taskManager->validateTask($message);
 
             if (0 === count($errors)) {
-                $taskManager->updateService($task);
+                $taskManager->updateService($message);
                 $this->addFlash(
                     'success',
                     'Tarea actualizada correctamente!'
@@ -231,28 +231,28 @@ class TaskController extends AbstractController
                 }
             }
         }
-        return $this->render('task/edit.html.twig', [
-            "task" => $task,
+        return $this->render('message/edit.html.twig', [
+            "message" => $message,
         ]);
     }
 
     /**
      * Con paramsConvert
      * @Route(
-     *      "/eliminar/tarea-servicio/{id}",
+     *      "/eliminar/message-service/{id}",
      *      name="app_delete_task_service"
      *
      * )
-     * @param Task $task
+     * @param Message $message
      * @param TaskManager $taskManager
      * @return Response
      */
-    public function deleteParamsConvertService(Task $task, TaskManager $taskManager): Response
+    public function deleteParamsConvertService(Message $message, TaskManager $taskManager): Response
     {
-        $taskManager->deleteService($task);
+        $taskManager->deleteService($message);
         $this->addFlash(
             'success',
-            'Tarea eliminada correctamente!'
+            'message deleted'
         );
 
         return $this->redirectToRoute('app_tasks');

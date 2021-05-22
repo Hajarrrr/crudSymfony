@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Messages:{% endblock %}
+
+{% block body %}
+    <h1>Messages:</h1>
+    {% include 'layouts/_message.html.twig' %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Message</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for index, message in messages %}
+            <tr>
+                <th scope="row">{{ index + 1 }}</th>
+                <td>{{ message.description }}</td>
+                <td>
+                   <a href="{{ path('app_edit_task_service-params-convert',{'id':message.id}) }}">Edit</a>
+                    <a href="{{ path('app_delete_task_service', {'id':message.id}) }}">Delete</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <th colspan="3" scope="row">No results found, add amessage by pressing in the top!</th>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+
+

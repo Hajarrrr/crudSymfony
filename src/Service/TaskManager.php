@@ -1,7 +1,7 @@
 <?php
 namespace App\Service;
 
-use App\Entity\Task;
+use App\Entity\Message;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -34,41 +34,41 @@ class TaskManager
 
 
     /**
-     * @param Task $task
+     * @param Message $message
      */
-    public function createService(Task $task): void
+    public function createService(MessageMessage $message): void
     {
-        $this->em->persist($task);
+        $this->em->persist($message);
         $this->em->flush();
     }
 
     /**
-     * @param Task $task
+     * @param Message $message
      */
-    public function updateService(Task $task): void
+    public function updateService(Message $message): void
     {
         $this->em->flush();
     }
 
     /**
-     * @param Task $task
+     * @param Message $message
      */
-    public function deleteService(Task $task): void
+    public function deleteService(Message $message): void
     {
-        $this->em->remove($task);
+        $this->em->remove($message);
         $this->em->flush();
     }
 
 
     /**
-     * @param Task $task
+     * @param Message $message
      * @return ConstraintViolationList
      */
-    public function validateTask(Task $task): ConstraintViolationList
+    public function validateTask(Message $message): ConstraintViolationList
     {
 
         // Con el bundle validator
-        $errors = $this->validator->validate($task);
+        $errors = $this->validator->validate($message);
         return $errors;
 
 
